@@ -404,6 +404,7 @@ class GuildChannel(ABC):
             return await self._state.http.edit_channel(self.id, reason=reason, **options)
 
     def _fill_overwrites(self, data: GuildChannelPayload) -> None:
+        return # Removes errors on data we don't need?
         self._overwrites = []
         everyone_index = 0
         everyone_id = self.guild.id
