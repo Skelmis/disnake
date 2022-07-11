@@ -626,7 +626,6 @@ class Interaction:
         """
         if self.response._responded:
             sender = self.followup.send
-            self.has_been_followed_up = True
         else:
             sender = self.response.send_message
         await sender(
@@ -643,6 +642,8 @@ class Interaction:
             suppress_embeds=suppress_embeds,
             delete_after=delete_after,
         )
+        if self.response._responded:
+            self.has_been_followed_up = True
 
 
 class InteractionResponse:
