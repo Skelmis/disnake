@@ -644,11 +644,13 @@ class InteractionResponse:
     __slots__: Tuple[str, ...] = (
         "_responded",
         "_parent",
+        "has_been_deferred"
     )
 
     def __init__(self, parent: Interaction):
         self._parent: Interaction = parent
         self._responded: bool = False
+        self.has_been_deferred: bool = False
 
     def is_done(self) -> bool:
         """Whether an interaction response has been done before.
@@ -700,6 +702,8 @@ class InteractionResponse:
         """
         if self._responded:
             raise InteractionResponded(self._parent)
+
+        self.has_been_deferred = True
 
         defer_type: Optional[InteractionResponseType] = None
         data: Dict[str, Any] = {}
