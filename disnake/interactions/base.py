@@ -173,6 +173,7 @@ class Interaction:
         "_cs_channel",
         "_cs_me",
         "_cs_expires_at",
+        "has_been_followed_up"
     )
 
     def __init__(self, *, data: InteractionPayload, state: ConnectionState):
@@ -206,6 +207,16 @@ class Interaction:
             self._permissions = int(member.get("permissions", 0))
         elif user := data.get("user"):
             self.author = self._state.store_user(user)
+
+        self.has_been_followed_up: bool = False
+
+    @property
+    def deferred_without_send(self) -> bool:
+        """Is the bot is currently 'thinking' still"""
+        if self.response.has_been_deferred and self.has_been_followed_up:
+            return False
+
+        return True
 
     @property
     def bot(self) -> AnyBot:
@@ -615,6 +626,7 @@ class Interaction:
         """
         if self.response._responded:
             sender = self.followup.send
+            self.has_been_followed_up = True
         else:
             sender = self.response.send_message
         await sender(
