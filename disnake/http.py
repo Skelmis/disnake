@@ -121,7 +121,7 @@ def _workaround_set_api_version(version: Literal[9, 10]):
     global _API_VERSION
     _API_VERSION = version
 
-    if os.environ.get("PROD", False):
+    if os.environ.get("PROD", False) and 1 == 2:
         # Use nirn proxy
         nirn_ip = os.environ["NIRN_IP"]
         nirn_port = os.environ["NIRN_PORT"]
@@ -2535,15 +2535,15 @@ class HTTPClient:
         else:
             value = "{url}?encoding={encoding}&v={version}"
 
-        if os.environ.get("PROD", False):
-            # Use nirn proxy
-            nirn_ip = os.environ["NIRN_IP"]
-            nirn_port = os.environ["NIRN_PORT"]
-            nirn = f"{nirn_ip}:{nirn_port}"
-            value = value.replace("gateway.discord.gg", nirn)
-            _log.warning("Configured the bot to use NIRN as a proxy")
-        else:
-            _log.warning("Connecting directly to gateway")
+        # if os.environ.get("PROD", False):
+        #     # Use nirn proxy
+        #     nirn_ip = os.environ["NIRN_IP"]
+        #     nirn_port = os.environ["NIRN_PORT"]
+        #     nirn = f"{nirn_ip}:{nirn_port}"
+        #     value = value.replace("gateway.discord.gg", nirn)
+        #     _log.warning("Configured the bot to use NIRN as a proxy")
+        # else:
+        #     _log.warning("Connecting directly to gateway")
 
         return (
             data["shards"],
