@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import os
 import re
 import sys
 import weakref
@@ -119,7 +120,14 @@ def _workaround_set_api_version(version: Literal[9, 10]):
 
     global _API_VERSION
     _API_VERSION = version
-    Route.BASE = f"https://discord.com/api/v{_API_VERSION}"
+
+    if os.environ.get("PROD", False):
+        # Use nirn proxy
+        nirn_ip = os.environ["NIRN_IP"]
+        nirn_port = os.environ["NIRN_PORT"]
+        Route.BASE = f"https://{nirn_ip}:{nirn_port}/api/v{_API_VERSION}"
+    else:
+        Route.BASE = f"https://discord.com/api/v{_API_VERSION}"
 
 
 async def json_or_text(response: aiohttp.ClientResponse) -> Union[Dict[str, Any], str]:
