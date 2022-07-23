@@ -2534,6 +2534,17 @@ class HTTPClient:
             value = "{url}?encoding={encoding}&v={version}&compress=zlib-stream"
         else:
             value = "{url}?encoding={encoding}&v={version}"
+
+        if os.environ.get("PROD", False):
+            # Use nirn proxy
+            nirn_ip = os.environ["NIRN_IP"]
+            nirn_port = os.environ["NIRN_PORT"]
+            nirn = f"{nirn_ip}:{nirn_port}"
+            value = value.replace("gateway.discord.gg", nirn)
+            _log.warning("Configured the bot to use NIRN as a proxy")
+        else:
+            _log.warning("Connecting directly to gateway")
+
         return (
             data["shards"],
             value.format(url=data["url"], encoding=encoding, version=_API_VERSION),
