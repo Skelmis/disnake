@@ -129,6 +129,7 @@ def _workaround_set_api_version(version: Literal[9, 10]):
         _log.warning("Configured the bot to use NIRN as a proxy")
     else:
         Route.BASE = f"https://discord.com/api/v{_API_VERSION}"
+        _log.warning("Connecting directly to gateway")
 
 
 async def json_or_text(response: aiohttp.ClientResponse) -> Union[Dict[str, Any], str]:
