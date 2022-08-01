@@ -46,6 +46,7 @@ from typing import (
     overload,
 )
 
+import disnake
 from . import utils
 from .components import _component_factory
 from .embeds import Embed
@@ -1246,7 +1247,10 @@ class Message(Hashable):
 
         .. versionadded:: 2.4
         """
-        return self.guild and self.guild.get_thread(self.id)
+        if not isinstance(self.guild, disnake.Guild):
+            return None
+
+        return self.guild.get_thread(self.id)  # type: ignore
 
     def is_system(self) -> bool:
         """Whether the message is a system message.
